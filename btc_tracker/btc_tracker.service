@@ -1,0 +1,15 @@
+[Unit]
+Description=BTC/USDT Tracker Service
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/path/to/btc_tracker
+ExecStart=/usr/bin/python3 /path/to/btc_tracker/btc_tracker.py
+Restart=always
+RestartSec=5
+Environment="PATH=/usr/bin:/bin"
+EnvironmentFile=/path/to/btc_tracker/.env
+
+[Install]
+WantedBy=multi-user.target
