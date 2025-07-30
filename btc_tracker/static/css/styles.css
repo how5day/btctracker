@@ -1,1 +1,38 @@
-/* Main CSS file */
+/* Main CSS Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #f5f5f5;
+}
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Dashboard specific styles */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chart-container {
+  width: 100%;
+  max-width: 1000px;
+}
+
+canvas {
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.signals {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+}

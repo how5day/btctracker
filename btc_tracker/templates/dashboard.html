@@ -3,15 +3,10 @@
 <html>
 <head>
     <title>BTC Tracker Dashboard</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="/static/js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4/dist/socket.io.min.js"></script>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .container { display: flex; flex-direction: column; gap: 20px; }
-        .chart-container { width: 100%; max-width: 1000px; }
-        canvas { background: #f8f9fa; border-radius: 8px; }
-        .signals { background: #f8f9fa; padding: 15px; border-radius: 8px; }
-    </style>
 </head>
 <body>
     <div class="container">
