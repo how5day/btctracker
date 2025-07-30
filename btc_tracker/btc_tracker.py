@@ -138,9 +138,35 @@ async def handle_websocket():
             elif data.get('type') == 'error':
                 logger.error(f"WebSocket error: {data['msg']}")
 
+from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+import uvicorn
+import threading
+
+app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
+@app.get("/test")
+async def test():
+    return "FastAPI is working!"
+
+@app.get("/")
+async def dashboard(request: Request):
+    return templates.TemplateResponse("dashboard.html", {"request": request})
+
+def run_fastapi():
+    uvicorn.run(app, host="0.0.0.0", port=5001)
+
 def main():
     """Main application entry point"""
     logger.info("Starting BTC/USDT Tracker with WebSocket")
+    
+    # Start FastAPI in a separate thread
+    fastapi_thread = threading.Thread(target=run_fastapi)
+    fastapi_thread.daemon = True
+    fastapi_thread.start()
     
     # Start WebSocket event loop
     asyncio.get_event_loop().run_until_complete(handle_websocket())
