@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BTC Tracker Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4/dist/socket.io.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { display: flex; flex-direction: column; gap: 20px; }
+        .chart-container { width: 100%; max-width: 1000px; }
+        canvas { background: #f8f9fa; border-radius: 8px; }
+        .signals { background: #f8f9fa; padding: 15px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BTC/USDT Trading Signals</h1>
+        
+        <div class="chart-container">
+            <h2>MACD Indicator</h2>
+            <canvas id="macdChart"></canvas>
+        </div>
+        
+        <div class="signals">
+            <h2>Recent Signals</h2>
+            <ul id="signalList"></ul>
+        </div>
+    </div>
+
+    <script>
+        // Initialize chart
+        const ctx = document.getElementById('macdChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [
+                    { label: 'MACD', borderColor: 'blue' },
+                    { label: 'Signal', borderColor: 'orange' },
+                    { label: 'Histogram', borderColor: 'green', type: 'bar' }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: { x: { type: 'realtime' } }
+            }
+        });
+
+        // Connect to WebSocket
+        const socket = io();
+        socket.on('macd_update', (data) => {
+            // Update chart with new data point
+            chart.data.labels.push(new Date().toLocaleTimeString());
+            chart.data.datasets[0].data.push(data.macd);
+            chart.data.datasets[1].data.push(data.signal);
+            chart.data.datasets[2].data.push(data.histogram);
+            chart.update();
+        });
+
+        socket.on('new_signal', (signal) => {
+            // Add new signal to list
+            const li = document.createElement('li');
+            li.innerHTML = `[${new Date().toLocaleTimeString()}] ${signal.type}: 
+                           MACD=${signal.macd.toFixed(6)}, 
+                           Signal=${signal.signal.toFixed(6)}`;
+            document.getElementById('signalList').prepend(li);
+        });
+    </script>
+</body>
+</html>

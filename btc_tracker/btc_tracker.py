@@ -138,9 +138,26 @@ async def handle_websocket():
             elif data.get('type') == 'error':
                 logger.error(f"WebSocket error: {data['msg']}")
 
+from flask import Flask, render_template
+import threading
+
+app = Flask(__name__)
+
+@app.route('/')
+def dashboard():
+    return render_template('dashboard.html')
+
+def run_flask():
+    app.run(port=5000, host='0.0.0.0')
+
 def main():
     """Main application entry point"""
     logger.info("Starting BTC/USDT Tracker with WebSocket")
+    
+    # Start Flask in a separate thread
+    flask_thread = threading.Thread(target=run_flask)
+    flask_thread.daemon = True
+    flask_thread.start()
     
     # Start WebSocket event loop
     asyncio.get_event_loop().run_until_complete(handle_websocket())
