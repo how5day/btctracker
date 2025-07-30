@@ -143,6 +143,10 @@ import threading
 
 app = Flask(__name__)
 
+@app.route('/test')
+def test():
+    return "Flask is working!"
+
 @app.route('/')
 def dashboard():
     return render_template('dashboard.html')
