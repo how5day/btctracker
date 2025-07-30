@@ -4,12 +4,12 @@ After=network.target
 
 [Service]
 User=ubuntu
-WorkingDirectory=/path/to/btc_tracker
-ExecStart=/usr/bin/python3 /path/to/btc_tracker/btc_tracker.py
+WorkingDirectory=/workspace/btctracker/btc_tracker
+ExecStart=/usr/bin/python3 /workspace/btctracker/btc_tracker/btc_tracker.py
 Restart=always
 RestartSec=5
 Environment="PATH=/usr/bin:/bin"
-EnvironmentFile=/path/to/btc_tracker/.env
+EnvironmentFile=/workspace/btctracker/btc_tracker/.env
 
 [Install]
 WantedBy=multi-user.target
