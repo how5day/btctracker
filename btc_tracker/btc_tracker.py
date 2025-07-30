@@ -138,30 +138,35 @@ async def handle_websocket():
             elif data.get('type') == 'error':
                 logger.error(f"WebSocket error: {data['msg']}")
 
-from flask import Flask, render_template
+from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+import uvicorn
 import threading
 
-app = Flask(__name__)
+app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
 
-@app.route('/test')
-def test():
-    return "Flask is working!"
+@app.get("/test")
+async def test():
+    return "FastAPI is working!"
 
-@app.route('/')
-def dashboard():
-    return render_template('dashboard.html')
+@app.get("/")
+async def dashboard(request: Request):
+    return templates.TemplateResponse("dashboard.html", {"request": request})
 
-def run_flask():
-    app.run(port=5000, host='0.0.0.0')
+def run_fastapi():
+    uvicorn.run(app, host="0.0.0.0", port=5000)
 
 def main():
     """Main application entry point"""
     logger.info("Starting BTC/USDT Tracker with WebSocket")
     
-    # Start Flask in a separate thread
-    flask_thread = threading.Thread(target=run_flask)
-    flask_thread.daemon = True
-    flask_thread.start()
+    # Start FastAPI in a separate thread
+    fastapi_thread = threading.Thread(target=run_fastapi)
+    fastapi_thread.daemon = True
+    fastapi_thread.start()
     
     # Start WebSocket event loop
     asyncio.get_event_loop().run_until_complete(handle_websocket())
